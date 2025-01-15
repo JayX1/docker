@@ -18,4 +18,8 @@ jobs:
       run: docker build . --file DockerfileBuild --tag demowebbuild:latest
     - name: Test Docker image
       run: |
-        docker run --rm demowebbuild /bin/sh -c "echo 'Image built successfully!'"
+            docker run -d --name demowebbuild-test -p 8080:8080 demowebbuild:latest
+            sleep 10 # Wait for the application to start
+            curl -f http://localhost:8080/actuator/health || (echo "Health check failed" && exit 1)
+            docker stop demowebbuild-test
+            docker rm demowebbuild-test
