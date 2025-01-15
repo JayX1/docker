@@ -17,4 +17,8 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file DockerfileBuild --tag demowebbuild:latest
     - name: Test Docker image
-      run: docker run --rm demowebbuild:latest /bin/sh -c "echo 'Image running successfully!'"
+      run: |
+        docker run -d --name demowebbuild-test demowebbuild:latest /bin/sh -c "echo 'Image running successfully!'"
+        sleep 10
+        docker stop demowebbuild-test
+        docker rm demowebbuild-test
